@@ -29,7 +29,7 @@ async def send_lyrics(bot: Client, message: Message):
             return
 
         await message.edit(f"Getting lyrics for `{song_name}`")
-        lyrics_results = await bot.get_inline_bot_results("Kpoploveandlovebot", song_name)
+        lyrics_results = await bot.get_inline_bot_results("LyricsorBot", song_name)
 
         try:
             # send to Saved Messages because hide_via doesn't work sometimes
