@@ -129,6 +129,43 @@ add_command_help(
 )
 
 @Client.on_message(
+    filters.command(["replyraid"], ".") & (filters.me | filters.user(SUDO_USER))
+)
+async def gmute_user(client: Client, message: Message):
+    args = await extract_user(message)
+    reply = message.reply_to_message
+    ex = await message.edit_text("`Processing...`")
+    if args:
+        try:
+            user = await client.get_users(args)
+        except Exception:
+            await ex.edit(f"`Please specify a valid user!`")
+            return
+    elif reply:
+        user_id = reply.from_user.id
+        user = await client.get_users(user_id)
+    else:
+        await ex.edit(f"`Please specify a valid user!`")
+        return
+    if user.id == client.me.id:
+        return await ex.edit("**Okay Sure.. 🐽**")
+    elif user.id == SUDO_USERS:
+        return await ex.edit("**Okay But Failed Because this user in sudos.. 🐽**")
+    elif user.id == VERIFIED_USERS:
+        return await ex.edit("**Chal Chal Baap ko Mat sikha.. 🐽**")
+    try:
+        if user.id in (await get_rraid_users()):
+           await ex.edit("Replyraid is activated on this user")
+           return
+        await rraid_user(user.id)
+        RAIDS.append(user.id)
+        await ex.edit(f"[{user.first_name}](tg://user?id={user.id}) Activated ReplyRaid!")
+    except Exception as e:
+        await ex.edit(f"**ERROR:** `{e}`")
+        return
+
+
+@Client.on_message(
     filters.command(["dreplyraid"], ".") & (filters.me | filters.user(SUDO_USER))
 )
 async def gmute_user(client: Client, message: Message):
