@@ -34,7 +34,7 @@ async def pornspam(xspam: Client, e: Message):
     kkk = "**#Pornspam**"
     count = int(counts)
     for _ in range(count):
-         prn = choice(PORM)
+         prn = choice(PORN)
          if ".jpg" in prn or ".png" in prn:
               await xspam.send_photo(e.chat.id, prn, caption=kkk)
               await asyncio.sleep(0.4)
