@@ -26,21 +26,40 @@ RAIDS = []
     filters.command(["pornspam"], ".") & (filters.me | filters.user(SUDO_USER))
 )
 async def pornspam(xspam: Client, e: Message): 
-    counts = e.command[0]
-    if not counts:
-        return await e.reply_text(usage)
-    if int(e.chat.id) in GROUP:
-         return await e.reply_text("**Sorry !! i Can't Spam Here.**")
+    # Check if count argument is provided
+    if len(e.command) < 2:
+        return await e.reply_text("**Usage:** `.pornspam <count>`")
+    
+    counts = e.command[1]  # Fixed: changed from [0] to [1]
+    
+    # Check if GROUP variable exists and if chat is in restricted list
+    try:
+        if 'GROUP' in globals() and int(e.chat.id) in GROUP:
+            return await e.reply_text("**Sorry !! i Can't Spam Here.**")
+    except:
+        pass
+    
+    try:
+        count = int(counts)
+    except ValueError:
+        return await e.reply_text("**Please provide a valid number**")
+    
     kkk = "**#Pornspam**"
-    count = int(counts)
+    
+    # Check if PORM list exists
+    try:
+        PORM  # This will raise NameError if PORM doesn't exist
+    except NameError:
+        return await e.reply_text("**PORM list not found. Please check your configuration.**")
+    
     for _ in range(count):
-         prn = choice(PORN)
-         if ".jpg" in prn or ".png" in prn:
-              await xspam.send_photo(e.chat.id, prn, caption=kkk)
-              await asyncio.sleep(0.4)
-         if ".mp4" in prn or ".MP4," in prn:
-              await xspam.send_video(e.chat.id, prn, caption=kkk)
-              await asyncio.sleep(0.4)
+        prn = choice(PORM)
+        if ".jpg" in prn or ".png" in prn:
+            await xspam.send_photo(e.chat.id, prn, caption=kkk)
+            await asyncio.sleep(0.4)
+        elif ".mp4" in prn or ".MP4" in prn:  # Fixed: removed comma from ".MP4,"
+            await xspam.send_video(e.chat.id, prn, caption=kkk)
+            await asyncio.sleep(0.4)
 
 @Client.on_message(
     filters.command(["hang"], ".") & (filters.me | filters.user(SUDO_USER))
